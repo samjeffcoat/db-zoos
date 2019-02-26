@@ -18,7 +18,7 @@ server.use(helmet());
 
 // endpoints here
 // Post to Zoos
-server.post("/", (req, res) => {
+server.post("/api/zoos/", (req, res) => {
   db("zoos")
     .insert(req.body)
     .then(ids => {
@@ -37,19 +37,19 @@ server.post("/", (req, res) => {
 });
 //get list of zoos
 
-server.get("/", (req, res) => {
+server.get("/api/zoos/", (req, res) => {
   db("zoos")
     .then(zoos => {
       res.status(200).json(zoos);
     })
     .catch(error => {
-      res.status(500).json(zoos);
+      res.status(500).json(error);
     });
 });
 
 // get list of zoos by id
 
-server.get("/:id", (req, res) => {
+server.get("/api/zoos/:id", (req, res) => {
   db("zoos")
     .where({ id: req.params.id })
     .first()
@@ -61,6 +61,42 @@ server.get("/:id", (req, res) => {
     });
 });
 
+//update zoos
+server.put("/api/zoos/:id", (req, res) => {
+  db("zoos")
+    .where({ id: req.params.id })
+    .update(req.body)
+    .then(count => {
+      if (count > 0) {
+        db("zoos")
+          .where({ id: req.params.id })
+          .first()
+          .then(zoo => {
+            res.status(200).json(zoo);
+          });
+      } else {
+        res.status(404).json({ message: "zoo not found" });
+      }
+    })
+    .catch(error => {
+      res.status(500).json(error);
+    });
+});
+/*
+server.put("/api/zoos/:id", (req, res) => {
+  const id = req.params.id;
+  const changes = req.body;
+  db("zoos")
+    .where("id", id)
+    .update(changes)
+    .then(change => {
+      res.status(200).json(change);
+    })
+    .catch(error => {
+      res.status(500).json(error);
+    });
+});
+*/
 const port = 3300;
 server.listen(port, function() {
   console.log(`\n=== Web API Listening on http://localhost:${port} ===\n`);
