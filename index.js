@@ -134,6 +134,15 @@ server.post("/api/bears/", (req, res) => {
         });
     });
 });
+server.get("/api/bears/", (req, res) => {
+  db("bears")
+    .then(bears => {
+      res.status(200).json(bears);
+    })
+    .catch(error => {
+      res.status(500).json(error);
+    });
+});
 
 const port = 3300;
 server.listen(port, function() {
