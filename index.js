@@ -18,7 +18,7 @@ server.use(helmet());
 
 // endpoints here
 // Post to Zoos
-server.post("/api/zoos", (req, res) => {
+server.post("/", (req, res) => {
   db("zoos")
     .insert(req.body)
     .then(ids => {
