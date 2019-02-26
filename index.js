@@ -154,6 +154,27 @@ server.get("/api/bears/:id", (req, res) => {
       res.status(500).json(error);
     });
 });
+server.put("/api/bears/:id", (req, res) => {
+  db("bears")
+    .where({ id: req.params.id })
+    .update(req.body)
+    .then(count => {
+      if (count > 0) {
+        db("bears")
+          .where({ id: req.params.id })
+          .first()
+          .then(bear => {
+            res.status(200).json(bear);
+          });
+      } else {
+        res.status(404).json({ message: "bear not found" });
+      }
+    })
+    .catch(error => {
+      res.status(500).json(error);
+    });
+});
+
 const port = 3300;
 server.listen(port, function() {
   console.log(`\n=== Web API Listening on http://localhost:${port} ===\n`);
