@@ -35,6 +35,7 @@ server.post("/", (req, res) => {
         });
     });
 });
+//get list of zoos
 
 server.get("/", (req, res) => {
   db("zoos")
@@ -43,6 +44,20 @@ server.get("/", (req, res) => {
     })
     .catch(error => {
       res.status(500).json(zoos);
+    });
+});
+
+// get list of zoos by id
+
+server.get("/:id", (req, res) => {
+  db("zoos")
+    .where({ id: req.params.id })
+    .first()
+    .then(zoo => {
+      res.status(200).json(zoo);
+    })
+    .catch(error => {
+      res.status(500).json(error);
     });
 });
 
